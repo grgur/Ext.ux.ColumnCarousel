@@ -1,0 +1,7 @@
+.mc-columncarousel {
+    position : relative;;
+}
+
+.mc-columncarousel-inner {
+    position           : absolute;
+}
