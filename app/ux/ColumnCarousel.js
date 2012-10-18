@@ -195,6 +195,9 @@ Ext.define('App.ux.ColumnCarousel', {
         Ext.each(this.getInnerItems(), function (item) {
             item.setWidth(childWidth + '%');
         });
+
+        this.setFirstItem(this.getFirstItem());
+
         return cols;
     },
 
