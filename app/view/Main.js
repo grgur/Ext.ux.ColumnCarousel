@@ -17,7 +17,7 @@ Ext.define("App.view.Main", {
                     {html : 'Four', hidden : false, style: {background: '#87f'}},
                     {html : 'Five', hidden : false, style: {background: '#637'}},
                     {html : 'Six', hidden : false, style: {background: '#f34'}},
-                    //{html : 'BORDER', docked : 'left', width : 100, style: {background: '#999'}}
+                    {html : 'BORDER', docked : 'left', width : 100, style: {background: '#999'}}
                 ]
             },
 
