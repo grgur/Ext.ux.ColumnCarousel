@@ -15,10 +15,7 @@ Ext.define('App.ux.ColumnCarousel', {
         },
 
         defaults : {
-            style : {
-                // stack all columns to the left
-                float  : 'left'
-            }
+            flex: 1
         },
 
         /**
@@ -62,6 +59,18 @@ Ext.define('App.ux.ColumnCarousel', {
      */
     lastLeftPerc : 0,
 
+    /**
+     * @private
+     * Cached column width
+     */
+    cachedColWidth: 0,
+
+    /**
+     * @private
+     * Flag that lets the component know whether it should recalc innerElement
+     */
+    drawn: false,
+
     initialize : function () {
         var me = this;
         me.callParent();
@@ -74,6 +83,11 @@ Ext.define('App.ux.ColumnCarousel', {
 
         // fix columns when movement has ended
         me.on('dragend', 'onDragEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
+
+        // recalculate widths when painted
+        me.on('painted', 'refreshView');
+
+        Ext.Viewport.on('orientationchange', 'refreshView', this);
     },
 
     /**
@@ -121,19 +135,15 @@ Ext.define('App.ux.ColumnCarousel', {
 
             // mind max left and max right (0 > x > maxLeft)
             curleft = (me.currentLeft < maxLeft) ? maxLeft : (me.currentLeft > 0 ) ? 0 : me.currentLeft,
-            endPerc = ( curleft / targetWidth ) * 100,
-            onePerc = 100 / me.getColumns(),
-            ratio = endPerc / onePerc,
+
+            oneColWidth = this.getColWidth(true),
+
+            ratio = curleft / oneColWidth,
 
             // if tap ends when column is under 50% visible, show it. Otherwise show the next one
-            round = Math.round(ratio),
-            leftPx;
+            round = Math.round(ratio);
 
         me.setFirstItem(round);
-
-        // save current leftmost position
-        leftPx = me.lastLeftPerc * targetWidth / 100;
-        me.currentLeft = leftPx;
     },
 
     /**
@@ -144,24 +154,21 @@ Ext.define('App.ux.ColumnCarousel', {
     onTouchMove : function (e) {
         var me = this,
             left = me.startLeft,
-            delta = me.startX - e.pageX,
-            newLeft = left - delta;
+            delta = me.startX - e.pageX;
 
-        me.innerElement.setStyle({
-            '-webkit-transition' : 'none',
-            '-webkit-transform'  : 'translate3d(' + newLeft + 'px,0,0)'
-        });
-        me.currentLeft = newLeft;
+        me.currentLeft = left - delta;
+
+        me.resetPosition();
     },
 
     /**
      * @private
      * Sets position to the percentage of the nearest column
      */
-    resetPosition : function () {
+    resetPosition : function (animate) {
         this.innerElement.setStyle({
-            '-webkit-transition' : '-webkit-transform 0.2s ease-out',
-            '-webkit-transform'  : 'translate3d(' + this.lastLeftPerc + '%,0,0)'
+            '-webkit-transition' : animate ? '-webkit-transform 0.2s ease-out' : 'none',
+            '-webkit-transform'  : 'translate3d(' + this.currentLeft + 'px,0,0)'
         });
     },
 
@@ -170,8 +177,64 @@ Ext.define('App.ux.ColumnCarousel', {
      * Get width in px of a single column
      * @return {Number} Width in px
      */
-    getColWidth : function () {
-        return this.innerElement.getWidth() / this.getColumns();
+    getColWidth : function (cached) {
+        if (this.cachedColWidth && cached===true) {
+            return this.cachedColWidth;
+        }
+
+        var visibleColumns = this.getColumns(),
+            totalColumns = this.getInnerItems().length,
+            visibleRatio = totalColumns / visibleColumns,
+            fullWidth = this.innerElement.getWidth(),
+            normalizedWidth = this.isDrawn ?  fullWidth / visibleRatio : fullWidth;
+
+        this.cachedColWidth = normalizedWidth / this.getColumns();
+
+        return this.cachedColWidth;
+    },
+
+    /**
+     * @private
+     * Force layout refresh
+     */
+    refreshView: function () {
+        this.resetInnerElWidth();
+        this.setColumns(this.getColumns());
+    },
+
+    resetInnerElWidth: function () {
+        var childWidth,
+            totalWidth;
+
+        this.isDrawn = false;
+        this.innerElement.setWidth('100%');
+
+        childWidth = this.getColWidth(),
+        totalWidth = childWidth * this.getInnerItems().length;
+
+        this.innerElement.setWidth(totalWidth + 'px');
+
+        return totalWidth;
+    },
+
+    /**
+     * @private
+     * Update the width of innerElement to be num-of-cols * one-col-width
+     * so that we can flex columns easily.
+     * Percentages of pixels perform poorly on Safari due to the rounding down issue
+     * @param {Number} cols Number of columns
+     * @return {Number} The provided number of columns
+     */
+    applyColumns : function (cols) {
+        if (!this.isPainted()) {
+            return cols;
+        }
+
+        Ext.defer(this.resetInnerElWidth, 1, this);
+        this.setFirstItem(this.getFirstItem());
+        this.isDrawn = true;
+
+        return cols;
     },
 
     /**
@@ -181,24 +244,7 @@ Ext.define('App.ux.ColumnCarousel', {
      * @return {Number} X position in px
      */
     applyMaxLeft : function () {
-        return -( this.getInnerItems().length - this.getColumns() ) * this.getColWidth();
-    },
-
-    /**
-     * @private
-     * Calculate percentage width for each column based on available view width
-     * @param {Number} cols Number of columns
-     * @return {Number} The provided number of columns
-     */
-    applyColumns : function (cols) {
-        var childWidth = 100 / cols;
-        Ext.each(this.getInnerItems(), function (item) {
-            item.setWidth(childWidth + '%');
-        });
-
-        this.setFirstItem(this.getFirstItem());
-
-        return cols;
+        return -( this.getInnerItems().length - this.getColumns() ) * this.getColWidth(true);
     },
 
     /**
@@ -210,7 +256,7 @@ Ext.define('App.ux.ColumnCarousel', {
     applyFirstItem: function (num) {
         var me = this,
             cols = me.getColumns(),
-            onePerc = 100 / cols,
+            oneColWidth = this.getColWidth(true),
             maxNum = me.getInnerItems().length - cols,
             left;
 
@@ -222,9 +268,10 @@ Ext.define('App.ux.ColumnCarousel', {
             num = -maxNum;
         }
 
-        left = num * onePerc;
-        me.lastLeftPerc = left;
-        me.resetPosition();
+        left = num * oneColWidth;
+
+        me.currentLeft = left;
+        me.resetPosition(true);
         return num;
     }
 });
