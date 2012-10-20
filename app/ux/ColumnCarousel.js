@@ -40,6 +40,11 @@ Ext.define('App.ux.ColumnCarousel', {
         firstItem: 0,
 
         /**
+         * Use false to disable animation when dragging ends
+         */
+        animation: true,
+
+        /**
          * @private
          * Maximum px to go to the left so that all last columns are visible
          */
@@ -177,6 +182,9 @@ Ext.define('App.ux.ColumnCarousel', {
      * Sets position to the percentage of the nearest column
      */
     resetPosition : function (animate) {
+        if (this.getAnimation() === false) {
+            animate = false;
+        }
         this.innerElement.setStyle({
             '-webkit-transition' : animate ? '-webkit-transform 0.2s ease-out' : 'none',
             'transition'         : animate ? 'transform 0.2s ease-out' : 'none',
