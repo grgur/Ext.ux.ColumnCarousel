@@ -1,10 +1,21 @@
 /**
- *
+ * Carousel in which components are stacked in columns instead of cards
+ * Uses 3D HW acceleration where available
  * @author Grgur Grisogono
+ *
+ * @event beginning
+ * Fires when the carousel reaches the first available component
+ * @param {Ext.ux.ColumnCarousel} this
+ *
+ * @event end
+ * Fires when the carousel reaches the last available component.
+ * This is not the last child component, but the point where carousel can go further
+ * @param {Ext.ux.ColumnCarousel} this
  */
 Ext.define('App.ux.ColumnCarousel', {
-    extend : 'Ext.Container',
-    xtype  : 'columncarousel',
+    extend             : 'Ext.Container',
+    xtype              : 'columncarousel',
+    alternateClassName : 'Ext.ux.ColumnCarousel',
 
     config : {
         baseCls : 'mc-columncarousel',
@@ -254,6 +265,11 @@ Ext.define('App.ux.ColumnCarousel', {
      * @return {Number} Index number
      */
     applyFirstItem: function (num) {
+        // do not process anything extra if cmp is not painted
+        if (!this.isPainted()) {
+            return num;
+        }
+
         var me = this,
             cols = me.getColumns(),
             oneColWidth = this.getColWidth(true),
@@ -267,6 +283,14 @@ Ext.define('App.ux.ColumnCarousel', {
         if (-num > maxNum) {
             num = -maxNum;
         }
+
+        if (num === -maxNum) {
+            this.fireEvent('end', this);
+        } else
+        if (num === 0) {
+            this.fireEvent('beginning', this);
+        }
+
 
         left = num * oneColWidth;
 
