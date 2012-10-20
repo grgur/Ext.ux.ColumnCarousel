@@ -63,6 +63,10 @@
         {
             "path": "resources/css/ColumnCarousel.css",
             "update": "delta"
+        },
+        {
+            "path": "resources/css/example.css",
+            "update": "delta"
         }
     ],
 
