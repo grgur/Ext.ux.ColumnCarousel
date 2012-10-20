@@ -48,7 +48,7 @@ Ext.define('App.ux.ColumnCarousel', {
 
     /**
      * @private
-     * Leftmost position of the cotnainer when dragging starts
+     * Leftmost position of the container when dragging starts
      */
     startLeft    : 0,
 
@@ -179,7 +179,9 @@ Ext.define('App.ux.ColumnCarousel', {
     resetPosition : function (animate) {
         this.innerElement.setStyle({
             '-webkit-transition' : animate ? '-webkit-transform 0.2s ease-out' : 'none',
-            '-webkit-transform'  : 'translate3d(' + this.currentLeft + 'px,0,0)'
+            'transition'         : animate ? 'transform 0.2s ease-out' : 'none',
+            '-webkit-transform'  : 'translate3d(' + this.currentLeft + 'px,0,0)',
+            'transform'          : 'translate3d(' + this.currentLeft + 'px,0,0)'
         });
     },
 
