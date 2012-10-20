@@ -4,11 +4,16 @@ Ext.ux.ColumnCarousel
 Column carousel for Sencha Touch 2
 
 Component located in app/ux/ComponentCarousel.js
+and resources/css/ComponentCarousel.css
 
+
+Demo
+====
 
 Testing demo (slow loading): http://grgur.com/st2-colcarousel/
 
 Production build demo (fast loading): http://grgur.com/st2-colcarousel/build/production/
+
 
 License
 =======
