@@ -11,6 +11,12 @@
  * Fires when the carousel reaches the last available component.
  * This is not the last child component, but the point where carousel can go further
  * @param {Ext.ux.ColumnCarousel} this
+ *
+ * @event beforeSliding
+ * Fires just before siding commences and a new column is shown
+ * @preventable doSetPosition
+ * @param {Ext.ux.ColumnCarousel} this
+ * @param {Number} index First visible column index
  */
 Ext.define('App.ux.ColumnCarousel', {
     extend             : 'Ext.Container',
@@ -294,13 +300,21 @@ Ext.define('App.ux.ColumnCarousel', {
             num = -maxNum;
         }
 
+        this.fireAction('beforeSliding', [this, num], 'doSetPosition', this, {args: [num, maxNum, oneColWidth]});
+
+        return num;
+    },
+
+    doSetPosition: function (num, maxNum, oneColWidth) {
+        var me = this,
+            left;
+
         if (num === -maxNum) {
             this.fireEvent('end', this);
         } else
         if (num === 0) {
             this.fireEvent('beginning', this);
         }
-
 
         left = num * oneColWidth;
 
