@@ -23,6 +23,10 @@ Ext.define('App.controller.Main', {
             carousel : {
                 beginning : 'onBegining',
                 end       : 'onEnd'
+            },
+
+            'sliderfield#numCols': {
+                change: 'onColNumChange'
             }
         }
 
@@ -44,5 +48,10 @@ Ext.define('App.controller.Main', {
 
     onEnd : function (view) {
         this.getExampleView().setRightNav({cls : 'disabled'});
+    },
+
+    onColNumChange: function (field) {
+        var val = field.getValue();
+        this.getCarousel().setColumns(val);
     }
 });

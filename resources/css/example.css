@@ -18,3 +18,8 @@
     background-image : none;
     background-color : #aaa;
 }
+
+.tbarslider .x-component-outer {
+    padding    : 0;
+    margin-top : -0.3em;
+}

@@ -14,7 +14,19 @@ Ext.define("App.view.Main", {
             {
                 xtype  : 'titlebar',
                 docked : 'top',
-                title  : '3-Col Carousel'
+                title  : '3-Col Carousel',
+                items  : [
+                    {
+                        xtype      : 'sliderfield',
+                        itemId     : 'numCols',
+                        cls        : 'tbarslider',
+                        label      : 'Cols',
+                        labelWidth : 40,
+                        value      : 3,
+                        minValue   : 1,
+                        maxValue   : 5
+                    }
+                ]
             }
         ],
 
