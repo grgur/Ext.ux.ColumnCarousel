@@ -305,6 +305,14 @@ Ext.define('App.ux.ColumnCarousel', {
         return num;
     },
 
+    /**
+     * @private
+     * Slide to the required column index
+     * @param {Number} num Column index
+     * @param {Number} maxNum Maximum column offsetX
+     * @param {Number} oneColWidth Width of one column
+     * @return {Number} num Column index
+     */
     doSetPosition: function (num, maxNum, oneColWidth) {
         var me = this,
             left;

@@ -21,12 +21,13 @@ Ext.define('App.controller.Main', {
             },
 
             carousel : {
-                beginning : 'onBegining',
-                end       : 'onEnd'
+                beginning     : 'onBegining',
+                end           : 'onEnd',
+                beforeSliding : 'onSlide'
             },
 
-            'sliderfield#numCols': {
-                change: 'onColNumChange'
+            'sliderfield#numCols' : {
+                change : 'onColNumChange'
             }
         }
 
@@ -34,12 +35,10 @@ Ext.define('App.controller.Main', {
 
     onLeftNav : function (view) {
         this.getCarousel().prev();
-        view.getRightNav().removeCls('disabled');
     },
 
     onRightNav : function (view) {
         this.getCarousel().next();
-        view.getLeftNav().removeCls('disabled');
     },
 
     onBegining : function (view) {
@@ -50,8 +49,13 @@ Ext.define('App.controller.Main', {
         this.getExampleView().setRightNav({cls : 'disabled'});
     },
 
-    onColNumChange: function (field) {
+    onColNumChange : function (field) {
         var val = field.getValue();
         this.getCarousel().setColumns(val);
+    },
+
+    onSlide: function () {
+        this.getExampleView().getLeftNav().removeCls('disabled');
+        this.getExampleView().getRightNav().removeCls('disabled');
     }
 });

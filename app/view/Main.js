@@ -5,6 +5,7 @@ Ext.define("App.view.Main", {
     requires : [
         'Ext.TitleBar',
         'Ext.dataview.List',
+        'Ext.field.Slider',
         'App.ux.ColumnCarousel'
     ],
 
