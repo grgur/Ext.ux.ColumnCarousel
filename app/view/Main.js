@@ -32,7 +32,6 @@ Ext.define("App.view.Main", {
         ],
 
         carousel : {
-//            masked: {loading: true},
             columns: 1
         },
 
@@ -64,6 +63,8 @@ Ext.define("App.view.Main", {
             this.add(rightNav);
             rightNav.on('tap', Ext.bind(this.fireNavEvent, this, ['rightnav'], false), this, { element : 'element' });
         }
+
+//        this.getCarousel().on('refresh', function () {return false;}, this, { single: true });
 
         this.add(this.getCarousel());
 

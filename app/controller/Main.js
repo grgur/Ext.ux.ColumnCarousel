@@ -25,7 +25,8 @@ Ext.define('App.controller.Main', {
             carousel : {
                 beginning     : 'onBegining',
                 end           : 'onEnd',
-                beforeSliding : 'onSlide'
+                beforeSliding : 'onSlide',
+                refresh       : 'onUpdateDimensions'
             },
 
             'sliderfield#numCols' : {
@@ -37,16 +38,29 @@ Ext.define('App.controller.Main', {
 
     launch : function () {
         var store = Ext.StoreMgr.lookup('AllThingsD');
+
+        // show loading mask
+        Ext.Viewport.setMasked({
+           xtype: 'loadmask',
+           message: 'Loading content..',
+           indicator: true
+        });
+
         store.on('load', this.onStoreLoad, this);
         store.load();
-
-        Ext.Viewport.on('orientationchange', this.onUpdateDimensions, this);
     },
 
     onStoreLoad : function (store) {
         var view = this.getExampleView(),
             carousel = this.getCarousel(),
             width = Math.round(carousel.getColWidth(true) - 18);
+
+        // show loading mask
+        Ext.Viewport.setMasked({
+           xtype: 'loadmask',
+           message: 'Preparing data..',
+           indicator: true
+        });
 
         carousel.removeAll();
 
@@ -71,12 +85,15 @@ Ext.define('App.controller.Main', {
             carousel.add({
                 tpl        : tpl,
                 data       : data,
-                scrollable : 'vertical'
+                scrollable : {
+                    direction     : 'vertical',
+                    directionLock : true
+                }
             });
         });
 
         carousel.refreshView();
-        this.onUpdateDimensions(0);
+//        this.onUpdateDimensions(0);
     },
 
     onLeftNav : function (view) {
@@ -133,8 +150,8 @@ Ext.define('App.controller.Main', {
         Ext.defer(function () {
             carousel.setFirstItem(first);
             me.resizeImgs();
+            console.log('update');
+            Ext.Viewport.setMasked(false);
         }, 1);
-
-        cont = this;
     }
 });

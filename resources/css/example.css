@@ -24,12 +24,16 @@
     margin-top : -0.3em;
 }
 
-
 .feed-title {
-    font-weight: bold;
-    padding: 8px;
+    font-weight : bold;
+    padding     : 8px;
 }
+
 .feed-body {
-    padding: 8px;
+    padding : 8px;
+}
+
+.feed-img {
+    padding : 8px;
 }
 
