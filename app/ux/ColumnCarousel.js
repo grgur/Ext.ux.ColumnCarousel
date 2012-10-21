@@ -17,6 +17,13 @@
  * @preventable doSetPosition
  * @param {Ext.ux.ColumnCarousel} this
  * @param {Number} index First visible column index
+ *
+ * @event refresh
+ * Fires when view is refreshed
+ * @preventable
+ * @param {Ext.ux.ColumnCarousel} this
+ * @param {Ext.Viewport} viewport Ext.Viewport instance (if refreshed after orientation change)
+ * @param {String} orientation New orientation (if refreshed after orientation change)
  */
 Ext.define('App.ux.ColumnCarousel', {
     extend             : 'Ext.Container',
@@ -235,9 +242,18 @@ Ext.define('App.ux.ColumnCarousel', {
     /**
      * Force layout refresh
      */
-    refreshView: function () {
-        this.resetInnerElWidth();
-        this.setColumns(this.getColumns());
+    refreshView: function (viewport, orientation) {
+        var me = this;
+
+        // exit gracefully if no items are present
+        if (this.getInnerItems().length === 0) {
+            return false;
+        }
+
+        this.fireAction('refresh', [this, viewport, orientation], function () {
+            me.resetInnerElWidth();
+            me.setColumns(me.getColumns());
+        });
     },
 
     resetInnerElWidth: function () {
