@@ -15,7 +15,7 @@ Ext.define("App.view.Main", {
             {
                 xtype  : 'titlebar',
                 docked : 'top',
-                title  : '3-Col Carousel',
+                title  : 'ATD',
                 items  : [
                     {
                         xtype      : 'sliderfield',
@@ -32,15 +32,8 @@ Ext.define("App.view.Main", {
         ],
 
         carousel : {
-            items : [
-//                {html : 'One', style : {background : '#e8a'}},
-                {xtype: 'allthingsd'},
-                {xtype: 'TechCrunch'},
-                {html : 'Three', style : {background : '#8d4'}},
-                {html : 'Four', hidden : false, style : {background : '#87f'}},
-                {html : 'Five', hidden : false, style : {background : '#637'}},
-                {html : 'Six', hidden : false, style : {background : '#f34'}}
-            ]
+//            masked: {loading: true},
+            columns: 1
         },
 
         leftNav : {

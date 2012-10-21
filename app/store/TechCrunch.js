@@ -8,7 +8,7 @@ Ext.define('App.store.TechCrunch', {
     uses : ['App.model.TechCrunch'],
 
     config : {
-        autoLoad : true,
+//        autoLoad : true,
         storeId  : 'TechCrunch',
         model    : 'App.model.TechCrunch'
     }

@@ -8,7 +8,7 @@ Ext.define('App.store.AllThingsD', {
     uses : ['App.model.AllThingsD'],
 
     config : {
-        autoLoad : true,
+//        autoLoad : true,
         storeId  : 'AllThingsD',
         model    : 'App.model.AllThingsD'
     }
