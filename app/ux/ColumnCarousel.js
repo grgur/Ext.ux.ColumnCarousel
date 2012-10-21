@@ -221,7 +221,6 @@ Ext.define('App.ux.ColumnCarousel', {
     },
 
     /**
-     * @private
      * Force layout refresh
      */
     refreshView: function () {
