@@ -6,7 +6,9 @@ Ext.define('App.controller.Main', {
     extend : 'Ext.app.Controller',
 
     config : {
-        views : ['Main'],
+        views  : ['Main', 'AllThingsD', 'TechCrunch'],
+        models : ['AllThingsD', 'TechCrunch'],
+        stores : ['AllThingsD', 'TechCrunch'],
 
         refs : {
             exampleView : 'colcarexample',
@@ -54,7 +56,7 @@ Ext.define('App.controller.Main', {
         this.getCarousel().setColumns(val);
     },
 
-    onSlide: function () {
+    onSlide : function () {
         this.getExampleView().getLeftNav().removeCls('disabled');
         this.getExampleView().getRightNav().removeCls('disabled');
     }

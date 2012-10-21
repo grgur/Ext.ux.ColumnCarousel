@@ -33,8 +33,9 @@ Ext.define("App.view.Main", {
 
         carousel : {
             items : [
-                {html : 'One', style : {background : '#e8a'}},
-                {html : 'Two', style : {background : '#573'}},
+//                {html : 'One', style : {background : '#e8a'}},
+                {xtype: 'allthingsd'},
+                {xtype: 'TechCrunch'},
                 {html : 'Three', style : {background : '#8d4'}},
                 {html : 'Four', hidden : false, style : {background : '#87f'}},
                 {html : 'Five', hidden : false, style : {background : '#637'}},
