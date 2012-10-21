@@ -136,7 +136,7 @@ Ext.define('App.ux.ColumnCarousel', {
     /**
      * @private
      * Note startLeft and startX before movement starts
-     * @param e Event
+     * @param {Ext.event.Event} e Touch event
      */
     onTouchStart : function (e) {
         var me = this;
@@ -148,9 +148,36 @@ Ext.define('App.ux.ColumnCarousel', {
     /**
      * @private
      * Fix positions when dragging ends
-     * @param e Event
+     * @param {Ext.event.Event} e Touch event
      */
-    onTouchEnd : function (e) {
+    onTouchEnd : function (e, returnItem) {
+        this.setFirstItem(this.getCurrentlyFirstColumn(e));
+    },
+
+    /**
+     * @private
+     * Track changes when finger moves
+     * @param {Ext.event.Event} e Touch event
+     */
+    onTouchMove : function (e) {
+        var me = this,
+            left = me.startLeft,
+            delta = me.startX - e.pageX;
+
+        me.currentLeft = left - delta;
+
+        me.hideInvisibleColumns(me.getCurrentlyFirstColumn(e, true));
+
+        me.resetPosition();
+    },
+
+    /**
+     * @private
+     * Get first column based on touch event
+     * @param {Ext.event.Event} e Touch event
+     * @return {Number} index Column index
+     */
+    getCurrentlyFirstColumn: function (e, roundUp) {
         var me = this,
             targetWidth = e.delegatedTarget.offsetWidth,
             maxLeft = me.getMaxLeft(),
@@ -163,24 +190,9 @@ Ext.define('App.ux.ColumnCarousel', {
             ratio = curleft / oneColWidth,
 
             // if tap ends when column is under 50% visible, show it. Otherwise show the next one
-            round = Math.round(ratio);
+            round = ( roundUp === true ) ? Math.ceil(Math.abs(ratio)) : Math.round(ratio);
 
-        me.setFirstItem(round);
-    },
-
-    /**
-     * @private
-     * Track changes when finger moves
-     * @param e
-     */
-    onTouchMove : function (e) {
-        var me = this,
-            left = me.startLeft,
-            delta = me.startX - e.pageX;
-
-        me.currentLeft = left - delta;
-
-        me.resetPosition();
+        return Math.abs(round);
     },
 
     /**
@@ -327,6 +339,41 @@ Ext.define('App.ux.ColumnCarousel', {
 
         me.currentLeft = left;
         me.resetPosition(true);
+
+        me.hideInvisibleColumns(num);
+
         return num;
+    },
+
+    /**
+     * Hide all columns that are not currently shown on screen
+     */
+    hideInvisibleColumns: function (num) {
+        var me = this,
+            items = me.getInnerItems(),
+            firstCol = Ext.isDefined(num) ? Math.abs(num) : me.getFirstItem(),
+            visibleColNum = me.getColumns(),
+            lastCol = firstCol + visibleColNum,
+            animate = this.getAnimation();
+
+        Ext.each(items, function (item, index) {
+            var inside = (firstCol <= index) && (index < lastCol),
+                el = item.innerElement;
+
+            if (!inside) {
+                if (animate === true) {
+                    el.removeCls('mc-opacity1');
+                    el.addCls('mc-animateshow mc-opacity0');
+                } else {
+                    el.addCls('mc-hidden');
+                }
+            } else {
+                if (animate === true) {
+                    el.replaceCls('mc-opacity0','mc-opacity1');
+                } else {
+                    el.removeCls('mc-hidden');
+                }
+            }
+        });
     }
 });

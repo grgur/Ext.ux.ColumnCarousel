@@ -3,5 +3,23 @@
 }
 
 .mc-columncarousel-inner {
-    position           : absolute;
+    position : absolute;
 }
+
+.mc-hidden {
+    display : none;
+}
+
+.mc-animateshow {
+    -webkit-transition : opacity 1.1s ease-out;
+    transition         : opacity 1.1s ease-out;
+}
+
+.mc-opacity0 {
+    opacity : 0;
+}
+
+.mc-opacity1 {
+    opacity: 1;
+}
+
