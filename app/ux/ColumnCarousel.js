@@ -104,7 +104,7 @@ Ext.define('App.ux.ColumnCarousel', {
         me.on('touchmove', 'onTouchMove', me, { element : 'element' });
 
         // fix columns when movement has ended
-        me.on('dragend', 'onDragEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
+        me.on('touchend', 'onDragEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
 
         // recalculate widths when painted
         me.on('painted', 'refreshView');
