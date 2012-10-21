@@ -104,7 +104,7 @@ Ext.define('App.ux.ColumnCarousel', {
         me.on('touchmove', 'onTouchMove', me, { element : 'element' });
 
         // fix columns when movement has ended
-        me.on('touchend', 'onDragEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
+        me.on('touchend', 'onTouchEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
 
         // recalculate widths when painted
         me.on('painted', 'refreshView');
@@ -150,7 +150,7 @@ Ext.define('App.ux.ColumnCarousel', {
      * Fix positions when dragging ends
      * @param e Event
      */
-    onDragEnd : function (e) {
+    onTouchEnd : function (e) {
         var me = this,
             targetWidth = e.delegatedTarget.offsetWidth,
             maxLeft = me.getMaxLeft(),
