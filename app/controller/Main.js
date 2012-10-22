@@ -26,7 +26,8 @@ Ext.define('App.controller.Main', {
                 beginning     : 'onBegining',
                 end           : 'onEnd',
                 beforeSliding : 'onSlide',
-                refresh       : 'onUpdateDimensions'
+                refresh       : 'onUpdateDimensions',
+                afterResize   : 'onResizeCompleted'
             },
 
             'sliderfield#numCols' : {
@@ -36,7 +37,7 @@ Ext.define('App.controller.Main', {
 
     },
 
-    init: function () {
+    init : function () {
         var store = Ext.StoreMgr.lookup('AllThingsD');
 
         // show loading mask
@@ -58,7 +59,8 @@ Ext.define('App.controller.Main', {
 
     onStoreLoad : function (store) {
         var me = this,
-            carousel = this.getCarousel(),
+            view = me.getExampleView(),
+            carousel = me.getCarousel(),
             width = Math.round(carousel.getColWidth(true) - 18);
 
         // update loading mask
@@ -75,7 +77,7 @@ Ext.define('App.controller.Main', {
             var tpl = Ext.create('Ext.XTemplate',
                     '<div class="feed-title">{title}</div>',
                     '<tpl if="img">',
-                        '<img class="feed-img" src="http://src.sencha.io/{width}/{img}" />',
+                    '<img class="feed-img" src="http://src.sencha.io/{width}/{img}" />',
                     '</tpl>',
                     '<div class="feed-body">{description}</div>',
                     {
@@ -99,11 +101,21 @@ Ext.define('App.controller.Main', {
             });
         });
 
+        view.setHidden(false);
+        view.element.setStyle('visibility', 'hidden');
+    },
+
+    onResizeCompleted : function () {
+        var me = this,
+            indicator = Ext.get('appLoadingIndicator');
+
+        if (!indicator) return;
+
         Ext.defer(function () {
             Ext.Viewport.setMasked(false);
-            Ext.fly('appLoadingIndicator').destroy();
-            me.getExampleView().setHidden(false);
-        }, 100);
+            indicator.destroy();
+            me.getExampleView().element.setStyle('visibility', 'visible');
+        }, 200);
     },
 
     onLeftNav : function (view) {

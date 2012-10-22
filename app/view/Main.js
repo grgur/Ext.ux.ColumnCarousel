@@ -1,4 +1,4 @@
-App.slowDevice = true || Ext.os.is.Android2 || Ext.browser.is.ChromeMobile || (Ext.os.is.iOS && Ext.os.version.lt('6'));
+App.slowDevice = Ext.os.is.Android2 || Ext.browser.is.ChromeMobile || (Ext.os.is.iOS && Ext.os.version.lt('5'));
 
 Ext.define("App.view.Main", {
     extend : 'Ext.Container',

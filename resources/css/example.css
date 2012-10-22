@@ -1,7 +1,10 @@
+@import url(http://fonts.googleapis.com/css?family=Antic+Didone|Marcellus|Montaga);
+
 body {
     background-image    : url(../images/loading-logo.png);
     background-repeat   : no-repeat;
     background-position : center 25%;
+    font-family: Antic Didone;
 }
 
 .leftnav, .rightnav {
@@ -36,11 +39,15 @@ body {
 }
 
 .feed-body {
-    padding : 8px;
+    padding : 5px 12px 5px 10px;
 }
 
 .feed-img {
     padding : 8px;
+}
+
+.feeer {
+    background: #E8E7E3;
 }
 
 .feeder .mc-animateshow .feed-img {
@@ -48,11 +55,11 @@ body {
 }
 
 .feeder .mc-opacity1 .feed-img {
-    -webkit-transform : scale(1);
+    color: white;
 }
 
 .feeder .mc-opacity0 .feed-img {
-    -webkit-transform : scale(0.9);
+    color: black;
 }
 
 .feeder .mc-columncarousel .x-container {
