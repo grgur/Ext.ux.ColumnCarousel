@@ -106,6 +106,12 @@ Ext.define('App.ux.ColumnCarousel', {
      */
     drawn: false,
 
+    /**
+     * @private
+     * Flag for scroller interference
+     */
+    isDragging: undefined,
+
     initialize : function () {
         var me = this;
         me.callParent();
@@ -115,6 +121,12 @@ Ext.define('App.ux.ColumnCarousel', {
 
         // track element movement while touching and moving
         me.on('touchmove', 'onTouchMove', me, { element : 'element' });
+
+        /**
+         * Check for scroller interference
+         * Have to use on drag, because scroller stops propagation of dragstart
+         */
+        me.on('drag', 'onDragStart', me, { element : 'element' });
 
         // fix columns when movement has ended
         me.on('touchend', 'onTouchEnd', me, { element : 'element', delegate : '.mc-columncarousel-inner' });
@@ -160,11 +172,28 @@ Ext.define('App.ux.ColumnCarousel', {
 
     /**
      * @private
+     * Test whether interfering with vertical scroller
+     * @param {Ext.event.Event} e Touch event
+     * @return {Boolean} isDragging
+     */
+    onDragStart: function (e) {
+        if (this.isDragging !== undefined) return;
+
+        if (e.absDeltaX < e.absDeltaY) {
+            return this.isDragging = false;
+        }
+
+        return this.isDragging = true;
+    },
+
+    /**
+     * @private
      * Fix positions when dragging ends
      * @param {Ext.event.Event} e Touch event
      */
     onTouchEnd : function (e, returnItem) {
         this.setFirstItem(this.getCurrentlyFirstColumn(e));
+        this.isDragging = undefined;
     },
 
     /**
@@ -176,6 +205,10 @@ Ext.define('App.ux.ColumnCarousel', {
         var me = this,
             left = me.startLeft,
             delta = me.startX - e.pageX;
+
+        if (!me.isDragging) {
+            return;
+        }
 
         me.currentLeft = left - delta;
 
