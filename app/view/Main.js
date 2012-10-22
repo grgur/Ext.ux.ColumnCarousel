@@ -1,3 +1,5 @@
+App.slowDevice = true || Ext.os.is.Android2 || Ext.browser.is.ChromeMobile || (Ext.os.is.iOS && Ext.os.version.lt('6'));
+
 Ext.define("App.view.Main", {
     extend : 'Ext.Container',
     xtype  : 'colcarexample',
@@ -10,6 +12,7 @@ Ext.define("App.view.Main", {
     ],
 
     config : {
+        cls    : App.slowDevice ? '' : 'feeder',
         layout : 'fit',
         items  : [
             {
@@ -32,7 +35,8 @@ Ext.define("App.view.Main", {
         ],
 
         carousel : {
-            columns: 1
+            columns   : 1,
+            animation : App.slowDevice ? false : true
         },
 
         leftNav : {
@@ -61,10 +65,10 @@ Ext.define("App.view.Main", {
 
         if (rightNav) {
             this.add(rightNav);
-            rightNav.on('tap', Ext.bind(this.fireNavEvent, this, ['rightnav'], false), this, { element : 'element' });
+            rightNav.on('tap', Ext.bind(this.fireNavEvent, this, [
+                'rightnav'
+            ], false), this, { element : 'element' });
         }
-
-//        this.getCarousel().on('refresh', function () {return false;}, this, { single: true });
 
         this.add(this.getCarousel());
 

@@ -36,30 +36,37 @@ Ext.define('App.controller.Main', {
 
     },
 
-    launch : function () {
+    init: function () {
         var store = Ext.StoreMgr.lookup('AllThingsD');
 
         // show loading mask
         Ext.Viewport.setMasked({
-           xtype: 'loadmask',
-           message: 'Loading content..',
-           indicator: true
+            xtype     : 'loadmask',
+            message   : 'Loading content..',
+            indicator : false,
+            cls       : 'loadingmask'
         });
 
         store.on('load', this.onStoreLoad, this);
         store.load();
     },
 
+    launch : function () {
+        // hide view to speed up
+        this.getExampleView().setHidden(true);
+    },
+
     onStoreLoad : function (store) {
-        var view = this.getExampleView(),
+        var me = this,
             carousel = this.getCarousel(),
             width = Math.round(carousel.getColWidth(true) - 18);
 
-        // show loading mask
+        // update loading mask
         Ext.Viewport.setMasked({
-           xtype: 'loadmask',
-           message: 'Preparing data..',
-           indicator: true
+            xtype     : 'loadmask',
+            message   : 'Preparing data..',
+            indicator : false,
+            cls       : 'loadingmask'
         });
 
         carousel.removeAll();
@@ -67,9 +74,9 @@ Ext.define('App.controller.Main', {
         store.each(function (record) {
             var tpl = Ext.create('Ext.XTemplate',
                     '<div class="feed-title">{title}</div>',
-                        '<tpl if="img">',
-                            '<img class="feed-img" src="http://src.sencha.io/{width}/{img}" />',
-                        '</tpl>',
+                    '<tpl if="img">',
+                        '<img class="feed-img" src="http://src.sencha.io/{width}/{img}" />',
+                    '</tpl>',
                     '<div class="feed-body">{description}</div>',
                     {
                         disableFormats : true
@@ -92,8 +99,11 @@ Ext.define('App.controller.Main', {
             });
         });
 
-        carousel.refreshView();
-//        this.onUpdateDimensions(0);
+        Ext.defer(function () {
+            Ext.Viewport.setMasked(false);
+            Ext.fly('appLoadingIndicator').destroy();
+            me.getExampleView().setHidden(false);
+        }, 100);
     },
 
     onLeftNav : function (view) {
@@ -147,11 +157,11 @@ Ext.define('App.controller.Main', {
         }
 
         this.getCarousel().setColumns(cols);
+
         Ext.defer(function () {
             carousel.setFirstItem(first);
             me.resizeImgs();
-            console.log('update');
-            Ext.Viewport.setMasked(false);
         }, 1);
+
     }
 });
