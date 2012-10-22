@@ -24,6 +24,12 @@
  * @param {Ext.ux.ColumnCarousel} this
  * @param {Ext.Viewport} viewport Ext.Viewport instance (if refreshed after orientation change)
  * @param {String} orientation New orientation (if refreshed after orientation change)
+ *
+ * @event afterResize
+ * Fires after columns have been resized
+ * @param {Ext.ux.ColumnCarousel} this
+ * @param {Number} childWidth Column width
+ * @param {Number} totalWidth Viewable area width
  */
 Ext.define('App.ux.ColumnCarousel', {
     extend             : 'Ext.Container',
@@ -257,16 +263,19 @@ Ext.define('App.ux.ColumnCarousel', {
     },
 
     resetInnerElWidth: function () {
-        var childWidth,
+        var me = this,
+            childWidth,
             totalWidth;
 
-        this.isDrawn = false;
-        this.innerElement.setWidth('100%');
+        me.isDrawn = false;
+        me.innerElement.setWidth('100%');
 
-        childWidth = this.getColWidth(),
-        totalWidth = childWidth * this.getInnerItems().length;
+        childWidth = me.getColWidth(),
+        totalWidth = childWidth * me.getInnerItems().length;
 
-        this.innerElement.setWidth(totalWidth + 'px');
+        me.innerElement.setWidth(totalWidth + 'px');
+
+        me.fireEvent('afterResize', me, childWidth, totalWidth);
 
         return totalWidth;
     },
