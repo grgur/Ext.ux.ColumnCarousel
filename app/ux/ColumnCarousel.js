@@ -367,9 +367,9 @@ Ext.define('App.ux.ColumnCarousel', {
     hideInvisibleColumns: function (num) {
         var me = this,
             items = me.getInnerItems(),
-            firstCol = Ext.isDefined(num) ? Math.abs(num) : me.getFirstItem(),
+            firstCol = (Ext.isDefined(num) ? Math.abs(num) : me.getFirstItem()) - 1,
             visibleColNum = me.getColumns(),
-            lastCol = firstCol + visibleColNum,
+            lastCol = firstCol + visibleColNum + 1,
             animate = this.getAnimation();
 
         if (animate !== true) {
