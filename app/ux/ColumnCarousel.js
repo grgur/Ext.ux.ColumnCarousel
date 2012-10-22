@@ -372,6 +372,11 @@ Ext.define('App.ux.ColumnCarousel', {
             lastCol = firstCol + visibleColNum,
             animate = this.getAnimation();
 
+        if (animate !== true) {
+            firstCol -= 1;
+            lastCol += 1;
+        }
+
         Ext.each(items, function (item, index) {
             var inside = (firstCol <= index) && (index < lastCol),
                 el = item.innerElement;
