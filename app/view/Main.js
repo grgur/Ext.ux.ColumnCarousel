@@ -19,7 +19,7 @@ Ext.define("App.view.Main", {
                 xtype  : 'titlebar',
                 docked : 'top',
                 title  : 'ATD',
-                items  : [
+                itemsx  : [
                     {
                         xtype      : 'sliderfield',
                         itemId     : 'numCols',
